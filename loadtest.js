@@ -3,21 +3,9 @@ import { check } from 'k6';
 
 export const options = {
   scenarios: {
-    searchI: {
-      exec: 'searchI',
-      vus: 50,
-      executor: 'constant-vus',
-      duration: '30s'
-    },
-    searchZ: {
-      exec: 'searchZ',
-      vus: 50,
-      executor: 'constant-vus',
-      duration: '30s'
-    },
-    searchGlass: {
-      exec: 'searchGlass',
-      vus: 50,
+    search: {
+      exec: 'search',
+      vus: 100,
       executor: 'constant-vus',
       duration: '30s'
     }
@@ -30,6 +18,12 @@ const booksQueryBase = {
 };
 
 const booksQueryParams = { headers: { 'Content-Type': 'application/json' } };
+
+export function search() {
+    searchI();
+    searchZ();
+    searchGlass();
+}
 
 export function searchI() {
   const res = http.post("http://localhost:4000/",
