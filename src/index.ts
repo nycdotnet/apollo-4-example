@@ -35,11 +35,16 @@ const books : Book[] = [
     }
 ];
 
+let requests = 0;
+
 const resolvers = {
     Query: {
         listBooks: () => books,
         listBooksByTitle(parent, args, contextValue, info) {
-            console.log('got call to list by title for ' + JSON.stringify(args));
+            requests++;
+            if (requests % 500 === 0) {
+                console.log(`The server has responded to ${requests} requests.`);
+            }
             return books.filter(b => b.title.includes(args.title))
         }
     }
