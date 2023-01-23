@@ -1,0 +1,22 @@
+{
+  "name": "apollo-4-example",
+  "version": "1.0.0",
+  "description": "This is an example of using the Apollo 4 server from https://www.apollographql.com/docs/apollo-server/getting-started",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "Steve Ognibene",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/server": "^4.3.1",
+    "graphql": "^16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
+  }
+}
