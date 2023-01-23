@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package apollo_example.books;
+
+service Books {
+    rpc ListBooks(ListBooksRequest) returns (ListBooksResponse);
+}
+
+message ListBooksRequest {
+    string title = 1;
+}
+
+message ListBooksResponse {
+    repeated Book books = 1;
+}
+
+message Book {
+    string title = 1;
+    string author = 2;
+}
