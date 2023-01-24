@@ -1,8 +1,9 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader'
 import { promisifyClient } from './promisify-grpc-client.js';
+import { fileURLToPath } from 'url';
 
-const booksProtoPath = new URL('../protos/books.proto', import.meta.url).pathname
+const booksProtoPath = fileURLToPath(new URL('../protos/books.proto', import.meta.url));
 
 const booksPackageDefinition = protoLoader.loadSync(
     booksProtoPath,

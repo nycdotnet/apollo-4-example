@@ -17,4 +17,7 @@ To start the backing gRPC server, run `npm run start-books-grpc`.
 
 Once both servers are launched, run benchmarks via `k6 run loadtest.js`.
 
-On my laptop, this GraphQL server can handle about 5000 requests/second at 39.2 ms median latency/ 48 ms p95 latency with no special configuration (single threaded Node.js launched via `npm run start`, Windows 10 x64, Node.js 18).  The server pegs a CPU while it's getting load tested, but then settles back down to zero when the test ends.  It holds steady at about 120 MB working set while busy and then settles down at around 25 MB while idle.
+Original Non-gRPC version:
+On my laptop, the original non-gRPC enabled GraphQL server can handle 5118 requests/second with 100 virtual users at 18.96 ms median latency/ 23.28 ms p95 latency with no special configuration (single threaded Node.js launched via `npm run start`, Windows 10 x64, Node.js 18).  The server pegs a CPU while it's getting load tested, but then settles back down to zero when the test ends.  It holds steady at about 120 MB working set while busy and then settles down at around 25 MB while idle.
+
+The gRPC version can handle 2081 requests/second with 100 virtual users at 46.76 ms median latency/56.23 ms p95.  The GraphQL server saturates a CPU and the gRPC server uses a little under half a core (guestimate from Task Manager).
