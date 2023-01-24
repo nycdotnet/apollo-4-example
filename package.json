@@ -7,7 +7,7 @@
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "start-books": "npm run compile && node ./dist/books-grpc-server.js"
+    "start-books-grpc": "npm run compile && node ./dist/books-grpc-server.js"
   },
   "keywords": [],
   "author": "Steve Ognibene",

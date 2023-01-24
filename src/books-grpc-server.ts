@@ -18,7 +18,7 @@ const bookData = [{
     author: 'Kate Chopin'
 },
 {
-    title: 'City of Glass1',
+    title: 'City of Glass',
     author: 'Paul Auster',
 }];
 

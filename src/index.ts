@@ -1,10 +1,11 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { createClient } from './books-grpc-client.js';
+import grpc from '@grpc/grpc-js';
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed
 // against your data.
-
 const typeDefs = `#graphql
     # comments in GraphQL start with a #
 
@@ -24,28 +25,17 @@ const typeDefs = `#graphql
     }
 `;
 
-const books : Book[] = [
-    {
-        title: 'The Awakening',
-        author: 'Kate Chopin'
-    },
-    {
-        title: 'City of Glass',
-        author: 'Paul Auster',
-    }
-];
-
-let requests = 0;
+const booksGrpcClient = createClient('0.0.0.0:50051', grpc.credentials.createInsecure());
 
 const resolvers = {
     Query: {
-        listBooks: () => books,
-        listBooksByTitle(parent, args, contextValue, info) {
-            requests++;
-            if (requests % 500 === 0) {
-                console.log(`The server has responded to ${requests} requests.`);
-            }
-            return books.filter(b => b.title.includes(args.title))
+        async listBooks(parent, args, contextValue, info) {
+            const b = await booksGrpcClient.listBooks({title: ''}) as any;
+            return b.books;
+        },
+        async listBooksByTitle(parent, args, contextValue, info) {
+            const b = await booksGrpcClient.listBooks({title: args.title}) as any;
+            return b.books;
         }
     }
 };
@@ -64,10 +54,5 @@ const server = new ApolloServer({
 const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
 });
-
-interface Book {
-    title: string;
-    author: string;
-}
 
 console.log(`🚀  Server ready at: ${url}`);
