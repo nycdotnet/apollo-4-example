@@ -1,6 +1,7 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader'
 import { fileURLToPath } from 'url';
+import { bookData } from './book-data.js';
 
 const booksProtoPath = fileURLToPath(new URL('../protos/books.proto', import.meta.url));
 
@@ -14,15 +15,6 @@ const booksPackageDefinition = protoLoader.loadSync(
         oneofs: true
     });
 const booksProto = (grpc.loadPackageDefinition(booksPackageDefinition) as any).apollo_example.books;
-
-const bookData = [{
-    title: 'The Awakening',
-    author: 'Kate Chopin'
-},
-{
-    title: 'City of Glass',
-    author: 'Paul Auster',
-}];
 
 function listBooks(call, callback) {
     const response = {

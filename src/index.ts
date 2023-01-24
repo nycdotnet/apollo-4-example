@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { createClient } from './books-grpc-client.js';
 import grpc from '@grpc/grpc-js';
+import { bookData } from './book-data.js';
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed
@@ -18,10 +19,8 @@ const typeDefs = `#graphql
     # the Query type is special: it lists all of the available queries that
     # clients can execute, along with the return types of each.
     type Query {
-        # the "books" query returns an array of zero or more Books.
-        listBooks: [Book]
         # the "books" query returns an array of zero or more Books when filtered by a partial title.
-        listBooksByTitle(title: String!): [Book]
+        listBooks(title: String!): [Book]
     }
 `;
 
@@ -30,12 +29,20 @@ const booksGrpcClient = createClient('0.0.0.0:50051', grpc.credentials.createIns
 const resolvers = {
     Query: {
         async listBooks(parent, args, contextValue, info) {
-            const b = await booksGrpcClient.listBooks({title: ''}) as any;
-            return b.books;
-        },
-        async listBooksByTitle(parent, args, contextValue, info) {
-            const b = await booksGrpcClient.listBooks({title: args.title}) as any;
-            return b.books;
+            if (contextValue['x-implementation'] === 'grpc') {
+                // call the gRPC service
+                const b = await booksGrpcClient.listBooks({title: args.title}) as any;
+                return b.books;
+            }
+            else if (contextValue['x-implementation'] === 'local') {
+                // use the "local" implementation.  This is totally unrealistic, but
+                // useful to demonstrate the lowest theoretical latency possible for the
+                // Apollo server implementation.
+                return bookData.filter(b => b.title.includes(args.title));                
+            }
+            else {
+                throw new Error('Not supported x-implementation header');
+            }
         }
     }
 };
@@ -53,6 +60,9 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
+    context: async ({ req, res }) => {
+        return { 'x-implementation': req.headers['x-implementation'] };
+    }
 });
 
 console.log(`🚀  Server ready at: ${url}`);
