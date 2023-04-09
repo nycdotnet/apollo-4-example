@@ -28,17 +28,17 @@ const booksGrpcClient = createClient('0.0.0.0:50051', grpc.credentials.createIns
 
 const resolvers = {
     Query: {
-        async listBooks(parent, args, contextValue, info) {
-            if (contextValue['x-implementation'] === 'grpc') {
+        async listBooks(parent, request, context, info) {
+            if (context['x-implementation'] === 'grpc') {
                 // call the gRPC service
-                const b = await booksGrpcClient.listBooks({title: args.title}) as any;
+                const b = await booksGrpcClient.listBooks({title: request.title}) as any;
                 return b.books;
             }
-            else if (contextValue['x-implementation'] === 'local') {
+            else if (context['x-implementation'] === 'local') {
                 // use the "local" implementation.  This is totally unrealistic, but
                 // useful to demonstrate the lowest theoretical latency possible for the
                 // Apollo server implementation.
-                return bookData.filter(b => b.title.includes(args.title));                
+                return bookData.filter(b => b.title.includes(request.title));                
             }
             else {
                 throw new Error('Not supported x-implementation header');

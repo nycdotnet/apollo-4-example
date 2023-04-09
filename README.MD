@@ -9,7 +9,7 @@ https://www.apollographql.com/docs/apollo-server/data/resolvers
 
 To get started, download the source and run `npm install`.
 
-Includes a benchmark script using [k6](https://k6.io/docs/using-k6/).
+Includes a benchmark script using [k6](https://k6.io/docs/get-started/installation/).
 
 To start the GraphQL server, run `npm run start`.
 
