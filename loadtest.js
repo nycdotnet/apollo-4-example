@@ -5,14 +5,14 @@ const useGrpcBooksService = {
   exec: 'searchGrpc',
   vus: 100,
   executor: 'constant-vus',
-  duration: '30s'
+  duration: '10s'
 };
 
 const useLocalImplementation = {
   exec: 'searchLocal',
   vus: 100,
   executor: 'constant-vus',
-  duration: '30s'
+  duration: '10s'
 };
 
 export const options = {
@@ -28,7 +28,6 @@ else if (__ENV.SCENARIO === 'GRPC' || !__ENV.SCENARIO) {
 else {
   throw new Error('Must specify -e SCENARIO=LOCAL or -e SCENARIO=GRPC.');
 }
-
 
 const booksQueryBase = {
   operationName: 'GetBooks',
